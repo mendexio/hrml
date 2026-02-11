@@ -1,0 +1,15 @@
+[package]
+name = "hrml-codegen"
+description = "Code generator for the HRML web language"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[dependencies]
+hrml-lexer = { path = "../hrml-lexer" }
+hrml-parser = { path = "../hrml-parser" }
+thiserror.workspace = true
+
+[dev-dependencies]
+pretty_assertions.workspace = true

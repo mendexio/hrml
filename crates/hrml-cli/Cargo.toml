@@ -1,0 +1,17 @@
+[package]
+name = "hrml-cli"
+description = "CLI for the HRML web language compiler"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[[bin]]
+name = "hrml"
+path = "src/main.rs"
+
+[dependencies]
+hrml-lexer = { path = "../hrml-lexer" }
+hrml-parser = { path = "../hrml-parser" }
+hrml-codegen = { path = "../hrml-codegen" }
+clap.workspace = true

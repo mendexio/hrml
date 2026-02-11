@@ -1,0 +1,13 @@
+[package]
+name = "hrml-lexer"
+description = "Tokenizer for the HRML web language"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[dependencies]
+thiserror.workspace = true
+
+[dev-dependencies]
+pretty_assertions.workspace = true
