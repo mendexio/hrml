@@ -121,13 +121,14 @@ pub struct PropDef {
 // ---------------------------------------------------------------------------
 
 /// A position in expression text (relative to the expression string, not the source file).
+/// Named `ExprSpan` to distinguish from `hrml_lexer::Span` which tracks source file positions.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub struct Span {
+pub struct ExprSpan {
     pub start: usize,
     pub end: usize,
 }
 
-impl Span {
+impl ExprSpan {
     pub fn new(start: usize, end: usize) -> Self {
         Self { start, end }
     }
@@ -137,7 +138,7 @@ impl Span {
 #[derive(Debug, Clone, PartialEq)]
 pub struct Expression {
     pub kind: ExprKind,
-    pub span: Span,
+    pub span: ExprSpan,
 }
 
 /// Expression variants.

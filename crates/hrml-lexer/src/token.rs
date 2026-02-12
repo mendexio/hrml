@@ -19,49 +19,50 @@ impl Span {
 }
 
 /// Token classification for HRML source.
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+///
+/// Data-carrying variants embed their value directly (no separate `value` field on Token).
+/// This follows the MOX pattern for type-safe token handling.
+#[derive(Debug, Clone, PartialEq)]
 pub enum TokenKind {
     // Structure
     Indent,
     Dedent,
     Newline,
 
-    // Elements
-    Element,
+    // Literals (carry data)
+    Identifier(String),
+    String(String),
+    Number(f64),
+    Boolean(bool),
+    Null,
+    Comment(String),
+    Interpolation(String),
 
     // Prefixes
-    Dot,          // .class
-    Colon,        // :state
-    At,           // @event
-    Dollar,       // $server
+    Dot,    // .class
+    Colon,  // :state
+    At,     // @event
+    Dollar, // $server
+    Hash,   // #id (future)
+    Plus,   // +element stacking (future)
 
-    // Literals
-    String,
-    Number,
+    // Punctuation
+    Equals,
+    Comma,
+    LParen,
+    RParen,
 
-    // Identifiers & keywords
-    Identifier,
+    // Keywords
     State,
     Computed,
     Fn,
-    AsyncFn,
+    Async,
+    Watch,
     Props,
     Emit,
     Import,
     Page,
     Config,
-
-    // Interpolation
-    InterpolationStart, // {
-    InterpolationEnd,   // }
-
-    // Attributes
-    Equals,
-
-    // Punctuation
-    Comma,
-    LParen,
-    RParen,
 
     // End of input
     Eof,
@@ -72,15 +73,21 @@ pub enum TokenKind {
 pub struct Token {
     pub kind: TokenKind,
     pub span: Span,
-    pub value: String,
 }
 
 impl Token {
-    pub fn new(kind: TokenKind, value: impl Into<String>, span: Span) -> Self {
-        Self {
-            kind,
-            span,
-            value: value.into(),
-        }
+    pub fn new(kind: TokenKind, span: Span) -> Self {
+        Self { kind, span }
     }
+}
+
+/// HTML5 void elements (self-closing, no children).
+pub const VOID_ELEMENTS: &[&str] = &[
+    "area", "base", "br", "col", "embed", "hr", "img", "input", "link", "meta", "param",
+    "source", "track", "wbr",
+];
+
+/// Check if a tag name is an HTML5 void element.
+pub fn is_void_element(tag: &str) -> bool {
+    VOID_ELEMENTS.contains(&tag)
 }

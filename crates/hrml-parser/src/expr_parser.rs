@@ -4,7 +4,7 @@
 //! Handles operator precedence, member access, function calls, and all
 //! expression forms that HRML supports.
 
-use crate::ast::{Expression, Span};
+use crate::ast::{Expression, ExprSpan};
 use crate::expr_lexer::Token;
 use crate::ParseError;
 
@@ -36,7 +36,7 @@ impl ExprParser {
         // TODO: Implement expression parsing in feature/parser branch
         Ok(Expression {
             kind: crate::ast::ExprKind::Null,
-            span: Span::new(0, source.len()),
+            span: ExprSpan::new(0, source.len()),
         })
     }
 }

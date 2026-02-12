@@ -18,13 +18,13 @@
 //! assert_eq!(tokens[2].kind, TokenKind::Number);
 //! ```
 
-use crate::ast::Span;
+use crate::ast::ExprSpan;
 
 /// A token produced by the expression lexer.
 #[derive(Debug, Clone, PartialEq)]
 pub struct Token {
     pub kind: TokenKind,
-    pub span: Span,
+    pub span: ExprSpan,
     pub value: TokenValue,
 }
 
@@ -93,10 +93,6 @@ pub enum TokenKind {
     Arrow,
     OptionalChain,
 
-    // Interpolation
-    InterpolationStart,
-    InterpolationEnd,
-
     // End of input
     Eof,
 }
@@ -115,7 +111,7 @@ pub enum TokenValue {
 #[derive(Debug, Clone, PartialEq)]
 pub struct ExprLexerError {
     pub message: String,
-    pub span: Span,
+    pub span: ExprSpan,
 }
 
 impl std::fmt::Display for ExprLexerError {
@@ -174,7 +170,7 @@ impl<'a> ExprLexer<'a> {
         if self.is_at_end() {
             return Ok(Token {
                 kind: TokenKind::Eof,
-                span: Span::new(self.pos, self.pos),
+                span: ExprSpan::new(self.pos, self.pos),
                 value: TokenValue::None,
             });
         }
@@ -263,15 +259,6 @@ impl<'a> ExprLexer<'a> {
                 self.advance_n(2);
                 Ok(self.token(TokenKind::OptionalChain, start, TokenValue::None))
             }
-            '{' if self.peek() == Some('{') => {
-                self.advance_n(2);
-                Ok(self.token(TokenKind::InterpolationStart, start, TokenValue::None))
-            }
-            '}' if self.peek() == Some('}') => {
-                self.advance_n(2);
-                Ok(self.token(TokenKind::InterpolationEnd, start, TokenValue::None))
-            }
-
             // Single-character tokens
             '+' => {
                 self.advance();
@@ -356,7 +343,7 @@ impl<'a> ExprLexer<'a> {
 
             _ => Err(ExprLexerError {
                 message: format!("Unexpected character: '{ch}'"),
-                span: Span::new(start, start + 1),
+                span: ExprSpan::new(start, start + 1),
             }),
         }
     }
@@ -371,7 +358,7 @@ impl<'a> ExprLexer<'a> {
         let text = &self.source[start..self.pos];
         let value: f64 = text.parse().map_err(|_| ExprLexerError {
             message: format!("Invalid number: '{text}'"),
-            span: Span::new(start, self.pos),
+            span: ExprSpan::new(start, self.pos),
         })?;
 
         Ok(self.token(TokenKind::Number, start, TokenValue::Number(value)))
@@ -389,7 +376,7 @@ impl<'a> ExprLexer<'a> {
                 if self.is_at_end() {
                     return Err(ExprLexerError {
                         message: "Unterminated escape sequence".into(),
-                        span: Span::new(start, self.pos),
+                        span: ExprSpan::new(start, self.pos),
                     });
                 }
                 match self.current() {
@@ -412,7 +399,7 @@ impl<'a> ExprLexer<'a> {
         if self.is_at_end() {
             return Err(ExprLexerError {
                 message: "Unterminated string".into(),
-                span: Span::new(start, self.pos),
+                span: ExprSpan::new(start, self.pos),
             });
         }
 
@@ -459,7 +446,7 @@ impl<'a> ExprLexer<'a> {
     fn token(&self, kind: TokenKind, start: usize, value: TokenValue) -> Token {
         Token {
             kind,
-            span: Span::new(start, self.pos),
+            span: ExprSpan::new(start, self.pos),
             value,
         }
     }
@@ -794,13 +781,13 @@ mod tests {
     }
 
     #[test]
-    fn test_interpolation_markers() {
+    fn test_braces() {
         assert_eq!(
-            kinds("{{ count }}"),
+            kinds("{ count }"),
             vec![
-                TokenKind::InterpolationStart,
+                TokenKind::LBrace,
                 TokenKind::Identifier,
-                TokenKind::InterpolationEnd,
+                TokenKind::RBrace,
                 TokenKind::Eof,
             ]
         );
@@ -834,8 +821,8 @@ mod tests {
     #[test]
     fn test_span_tracking() {
         let tokens = tokenize("a + b");
-        assert_eq!(tokens[0].span, Span::new(0, 1)); // 'a'
-        assert_eq!(tokens[1].span, Span::new(2, 3)); // '+'
-        assert_eq!(tokens[2].span, Span::new(4, 5)); // 'b'
+        assert_eq!(tokens[0].span, ExprSpan::new(0, 1)); // 'a'
+        assert_eq!(tokens[1].span, ExprSpan::new(2, 3)); // '+'
+        assert_eq!(tokens[2].span, ExprSpan::new(4, 5)); // 'b'
     }
 }
