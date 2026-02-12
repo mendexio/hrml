@@ -79,6 +79,10 @@ main {
   min-width: 0;
 }
 
+#left-panel {
+  flex: 0 0 30%;
+}
+
 .panel-header {
   padding: 6px 12px;
   font-size: 12px;
@@ -136,7 +140,7 @@ main {
 
 /* Preview */
 .preview-container {
-  flex: 1;
+  flex: 0 0 25%;
   display: flex;
   flex-direction: column;
   min-height: 0;
@@ -150,7 +154,7 @@ main {
 
 /* Output */
 .output-container {
-  flex: 0 0 30%;
+  flex: 1;
   min-height: 0;
   overflow: auto;
 }
