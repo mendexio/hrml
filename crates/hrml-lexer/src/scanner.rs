@@ -16,7 +16,7 @@ pub enum ScannerMode {
 /// Handles indentation tracking, prefix symbols, string literals
 /// with inline interpolation, and keyword detection.
 ///
-/// Follows patterns from the MOX compiler's ink-lexer:
+/// Design:
 /// - `Vec<char>` source for index-based navigation
 /// - Stack-based indentation tracking
 /// - Mode-aware brace handling
@@ -69,7 +69,7 @@ impl<'a> Scanner<'a> {
             self.scan_token()?;
         }
 
-        // Close all pending indents at EOF (MOX pattern)
+        // Close all pending indents at EOF
         while self.indent_stack.len() > 1 {
             self.indent_stack.pop();
             self.emit(TokenKind::Dedent);

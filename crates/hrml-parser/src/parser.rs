@@ -4,7 +4,7 @@
 //! Handles indentation-based nesting, element detection, prefix attributes,
 //! and delegates inline expressions to `expr_parser`.
 //!
-//! Follows MOX recursive descent patterns adapted for HRML syntax.
+//! Uses recursive descent parsing adapted for HRML syntax.
 
 use crate::ast::{
     Attribute, AttributePrefix, ComputedBlock, ComputedField, Document, Element, ExprKind,

@@ -21,7 +21,7 @@ impl Span {
 /// Token classification for HRML source.
 ///
 /// Data-carrying variants embed their value directly (no separate `value` field on Token).
-/// This follows the MOX pattern for type-safe token handling.
+/// Data-carrying variants provide type-safe token handling.
 #[derive(Debug, Clone, PartialEq)]
 pub enum TokenKind {
     // Structure

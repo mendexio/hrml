@@ -1,7 +1,7 @@
 //! Expression parser for HRML.
 //!
 //! Parses expression token streams (from `expr_lexer`) into `Expression` AST nodes.
-//! Uses recursive descent with operator precedence climbing (MOX pattern).
+//! Uses recursive descent with operator precedence climbing.
 //!
 //! Precedence (lowest to highest):
 //! 1. Assignment: `=`, `+=`, `-=`, `*=`, `/=`
