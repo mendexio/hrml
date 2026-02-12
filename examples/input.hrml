@@ -1,0 +1,5 @@
+state
+  name: ""
+
+input :model="name" placeholder="Type your name"
+span "Hello {name}!"

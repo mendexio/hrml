@@ -1,0 +1,5 @@
+state
+  visible: true
+
+button @click="visible = !visible" "Toggle"
+div :show="visible" "Content"
