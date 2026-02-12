@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HRML Playground</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header>
+    <h1><span>HRML</span> Playground</h1>
+    <div class="header-controls">
+      <select id="examples">
+        <option value="counter">Counter</option>
+        <option value="toggle">Toggle</option>
+        <option value="input">Input Binding</option>
+      </select>
+      <span class="version" id="version"></span>
+    </div>
+  </header>
+
+  <main>
+    <!-- Left: Editor with syntax overlay -->
+    <div class="panel" id="left-panel">
+      <div class="panel-header">Source</div>
+      <div class="editor-wrap">
+        <pre id="highlight" aria-hidden="true"></pre>
+        <textarea id="editor" spellcheck="false">Loading compiler...</textarea>
+      </div>
+    </div>
+
+    <div class="divider divider-h" id="divider-h"></div>
+
+    <!-- Right: Preview + Output -->
+    <div class="panel right-side" id="right-panel">
+      <div class="preview-container" id="preview-panel">
+        <div class="panel-header">Preview</div>
+        <iframe id="preview" sandbox="allow-scripts"></iframe>
+      </div>
+      <div class="divider divider-v" id="divider-v"></div>
+      <div class="output-container" id="output-panel">
+        <div class="panel-header">Output</div>
+        <div id="output"></div>
+      </div>
+    </div>
+  </main>
+
+  <script type="module">
+    import {examples} from './examples.js';
+    import {initCompiler, getVersion, compileAndRender, scheduleCompile} from './compiler.js';
+
+    const editor = document.getElementById('editor');
+    const highlightEl = document.getElementById('highlight');
+    const previewFrame = document.getElementById('preview');
+    const outputPanel = document.getElementById('output');
+    const exampleSelect = document.getElementById('examples');
+    const versionEl = document.getElementById('version');
+
+    // =========================================================================
+    // HRML syntax highlighting (editor overlay)
+    // =========================================================================
+
+    function esc(s) {
+      return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
+
+    function highlightHrml(source) {
+      return source.split('\n').map(line => {
+        const escaped = esc(line);
+
+        // Comments
+        if (/^\s*\/\//.test(line)) {
+          return '<span class="hl-hrml-comment">' + escaped + '</span>';
+        }
+
+        // State/computed keywords
+        if (/^(state|computed)\s*$/.test(line.trim())) {
+          return escaped.replace(/\b(state|computed)\b/, '<span class="hl-hrml-keyword">$1</span>');
+        }
+
+        // State field lines (indented key: value)
+        if (/^\s+\w+\s*:/.test(line)) {
+          return escaped
+            .replace(/^(\s+)(\w+)(\s*:\s*)/, '$1<span class="hl-hrml-attr-name">$2</span>$3')
+            .replace(/:\s*(".*?")/, ': <span class="hl-hrml-string">$1</span>')
+            .replace(/:\s*(true|false|null)\b/, ': <span class="hl-hrml-keyword">$1</span>')
+            .replace(/:\s*(\d+\.?\d*)/, ': <span class="hl-hrml-number">$1</span>');
+        }
+
+        // Element lines
+        return escaped
+          // Strings (text content and attribute values)
+          .replace(/(&quot;[^&]*?&quot;)/g, '<span class="hl-hrml-string">$1</span>')
+          // Interpolation inside strings: {expr}
+          .replace(/(\{[^}]+\})/g, '<span class="hl-hrml-interp">$1</span>')
+          // @ prefix (events)
+          .replace(/@([\w.]+)/g, '<span class="hl-hrml-prefix">@$1</span>')
+          // : prefix (state directives)
+          .replace(/:(show|if|model|class|text|each)\b/g, '<span class="hl-hrml-prefix">:$1</span>')
+          // .class names
+          .replace(/\.([\w-]+)/g, '<span class="hl-hrml-class">.$1</span>')
+          // Tag name (first word on a non-indented or element line)
+          .replace(/^(\s*)((?:div|span|button|input|form|a|p|h[1-6]|ul|ol|li|img|br|hr|section|nav|main|header|footer|article|aside|table|tr|td|th|label|select|option|textarea)\b)/,
+            '$1<span class="hl-hrml-tag">$2</span>');
+      }).join('\n');
+    }
+
+    function updateHighlight() {
+      highlightEl.innerHTML = highlightHrml(editor.value) + '\n';
+    }
+
+    // Sync scroll between textarea and pre
+    editor.addEventListener('scroll', () => {
+      highlightEl.scrollTop = editor.scrollTop;
+      highlightEl.scrollLeft = editor.scrollLeft;
+    });
+
+    // =========================================================================
+    // Init
+    // =========================================================================
+
+    try {
+      await initCompiler();
+      versionEl.textContent = 'v' + getVersion();
+    } catch (e) {
+      editor.value = 'Failed to load compiler: ' + e.message;
+      throw e;
+    }
+
+    // Load first example
+    editor.value = examples.counter;
+    editor.disabled = false;
+    updateHighlight();
+    compileAndRender(examples.counter, previewFrame, outputPanel);
+
+    // Compile + highlight on input
+    editor.addEventListener('input', () => {
+      updateHighlight();
+      scheduleCompile(editor.value, previewFrame, outputPanel, 300);
+    });
+
+    // Example selector
+    exampleSelect.addEventListener('change', () => {
+      const source = examples[exampleSelect.value];
+      if (source) {
+        editor.value = source;
+        updateHighlight();
+        compileAndRender(source, previewFrame, outputPanel);
+      }
+    });
+
+    // Tab key inserts 2 spaces
+    editor.addEventListener('keydown', (e) => {
+      if (e.key === 'Tab') {
+        e.preventDefault();
+        const start = editor.selectionStart;
+        const end = editor.selectionEnd;
+        editor.value = editor.value.substring(0, start) + '  ' + editor.value.substring(end);
+        editor.selectionStart = editor.selectionEnd = start + 2;
+        updateHighlight();
+        editor.dispatchEvent(new Event('input'));
+      }
+    });
+
+    // =========================================================================
+    // Resizable panels
+    // =========================================================================
+
+    function makeDraggable(divider, direction, beforeEl, afterEl) {
+      let startPos, startBefore, startAfter;
+
+      divider.addEventListener('mousedown', (e) => {
+        e.preventDefault();
+        const horizontal = direction === 'horizontal';
+        startPos = horizontal ? e.clientX : e.clientY;
+        startBefore = horizontal ? beforeEl.offsetWidth : beforeEl.offsetHeight;
+        startAfter = horizontal ? afterEl.offsetWidth : afterEl.offsetHeight;
+
+        document.body.style.cursor = horizontal ? 'col-resize' : 'row-resize';
+        document.body.style.userSelect = 'none';
+        previewFrame.style.pointerEvents = 'none';
+
+        function onMove(e) {
+          const current = horizontal ? e.clientX : e.clientY;
+          const delta = current - startPos;
+          const newBefore = Math.max(100, startBefore + delta);
+          const total = startBefore + startAfter;
+
+          beforeEl.style.flex = 'none';
+          afterEl.style.flex = 'none';
+
+          if (horizontal) {
+            beforeEl.style.width = newBefore + 'px';
+            afterEl.style.width = (total - newBefore) + 'px';
+          } else {
+            beforeEl.style.height = newBefore + 'px';
+            afterEl.style.height = (total - newBefore) + 'px';
+          }
+        }
+
+        function onUp() {
+          document.removeEventListener('mousemove', onMove);
+          document.removeEventListener('mouseup', onUp);
+          document.body.style.cursor = '';
+          document.body.style.userSelect = '';
+          previewFrame.style.pointerEvents = '';
+        }
+
+        document.addEventListener('mousemove', onMove);
+        document.addEventListener('mouseup', onUp);
+      });
+    }
+
+    makeDraggable(
+      document.getElementById('divider-h'),
+      'horizontal',
+      document.getElementById('left-panel'),
+      document.getElementById('right-panel')
+    );
+
+    makeDraggable(
+      document.getElementById('divider-v'),
+      'vertical',
+      document.getElementById('preview-panel'),
+      document.getElementById('output-panel')
+    );
+  </script>
+
+</body>
+</html>

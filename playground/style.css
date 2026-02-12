@@ -1,0 +1,245 @@
+/* HRML Playground — minimal styling */
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #1e1e2e;
+  --surface: #313244;
+  --border: #45475a;
+  --text: #cdd6f4;
+  --text-dim: #a6adc8;
+  --accent: #89b4fa;
+  --error: #f38ba8;
+  --font-mono: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+}
+
+body {
+  font-family: system-ui, -apple-system, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* Header */
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 16px;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+header h1 {
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+header h1 span {
+  color: var(--accent);
+}
+
+.header-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+select {
+  background: var(--surface);
+  color: var(--text);
+  border: 1px solid var(--border);
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.version {
+  font-size: 12px;
+  color: var(--text-dim);
+}
+
+/* Main layout */
+main {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+/* Panels */
+.panel {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+}
+
+.panel-header {
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-dim);
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+/* Dividers (draggable) */
+.divider-h {
+  width: 5px;
+  background: var(--border);
+  flex-shrink: 0;
+  cursor: col-resize;
+  transition: background 0.15s;
+}
+
+.divider-h:hover {
+  background: var(--accent);
+}
+
+.divider-v {
+  height: 5px;
+  background: var(--border);
+  flex-shrink: 0;
+  cursor: row-resize;
+  transition: background 0.15s;
+}
+
+/* Editor */
+#editor {
+  flex: 1;
+  background: var(--bg);
+  color: var(--text);
+  border: none;
+  padding: 12px;
+  font-family: var(--font-mono);
+  font-size: 14px;
+  line-height: 1.6;
+  resize: none;
+  outline: none;
+  tab-size: 2;
+}
+
+/* Right side: preview + output */
+.right-side {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+}
+
+/* Preview */
+.preview-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.preview-container iframe {
+  flex: 1;
+  border: none;
+  background: #fff;
+}
+
+/* Output */
+.output-container {
+  flex: 0 0 30%;
+  min-height: 0;
+  overflow: auto;
+}
+
+.divider-v:hover {
+  background: var(--accent);
+}
+
+#output {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  line-height: 1.5;
+  padding: 8px 12px;
+  white-space: pre;
+  overflow-x: auto;
+  color: var(--text-dim);
+}
+
+#output.error {
+  color: var(--error);
+}
+
+/* Syntax highlighting — output */
+.hl-tag { color: #f38ba8; }
+.hl-attr-name { color: #fab387; }
+.hl-attr-value { color: #a6e3a1; }
+.hl-string { color: #a6e3a1; }
+.hl-keyword { color: #cba6f7; }
+.hl-number { color: #fab387; }
+.hl-comment { color: #6c7086; font-style: italic; }
+.hl-doctype { color: #6c7086; }
+
+/* Syntax highlighting — editor overlay */
+.editor-wrap {
+  position: relative;
+  flex: 1;
+  overflow: hidden;
+}
+
+.editor-wrap textarea,
+.editor-wrap pre {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  padding: 12px;
+  font-family: var(--font-mono);
+  font-size: 14px;
+  line-height: 1.6;
+  tab-size: 2;
+  white-space: pre;
+  overflow: auto;
+  border: none;
+  margin: 0;
+}
+
+.editor-wrap textarea {
+  background: transparent;
+  color: transparent;
+  caret-color: var(--text);
+  resize: none;
+  outline: none;
+  z-index: 1;
+}
+
+.editor-wrap pre {
+  background: var(--bg);
+  color: var(--text);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* HRML source highlighting */
+.hl-hrml-keyword { color: #cba6f7; }
+.hl-hrml-tag { color: #f38ba8; }
+.hl-hrml-class { color: #89b4fa; }
+.hl-hrml-prefix { color: #fab387; }
+.hl-hrml-string { color: #a6e3a1; }
+.hl-hrml-number { color: #fab387; }
+.hl-hrml-comment { color: #6c7086; font-style: italic; }
+.hl-hrml-interp { color: #f9e2af; }
+
+/* Loading state */
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  color: var(--text-dim);
+  font-size: 14px;
+}
