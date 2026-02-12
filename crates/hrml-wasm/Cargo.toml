@@ -1,0 +1,19 @@
+[package]
+name = "hrml-wasm"
+description = "WASM bindings for the HRML web language compiler"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+hrml-parser = { path = "../hrml-parser" }
+hrml-codegen = { path = "../hrml-codegen" }
+wasm-bindgen.workspace = true
+js-sys.workspace = true
+
+[dev-dependencies]
+pretty_assertions.workspace = true

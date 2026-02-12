@@ -4,6 +4,7 @@ members = [
     "crates/hrml-lexer",
     "crates/hrml-parser",
     "crates/hrml-codegen",
+    "crates/hrml-wasm",
     "crates/hrml-cli",
 ]
 
@@ -16,4 +17,8 @@ repository = "https://github.com/mendexio/hrml"
 [workspace.dependencies]
 thiserror = "2.0"
 clap = { version = "4.5", features = ["derive"] }
+wasm-bindgen = "0.2"
+js-sys = "0.3"
+serde = { version = "1.0", features = ["derive"] }
+serde-wasm-bindgen = "0.6"
 pretty_assertions = "1.4"
