@@ -22,10 +22,10 @@ pub enum Node {
     /// An HTML element with optional classes, attributes, and children.
     Element(Element),
 
-    /// A `:state` block declaring reactive state.
+    /// A `state` block declaring reactive state.
     StateBlock(StateBlock),
 
-    /// A `:computed` block declaring derived values.
+    /// A `computed` block declaring derived values.
     ComputedBlock(ComputedBlock),
 
     /// A `fn` or `async fn` declaration.
@@ -34,8 +34,11 @@ pub enum Node {
     /// A component definition.
     Component(Component),
 
-    /// Raw text content.
+    /// Raw text content (may contain `{expr}` interpolation markers).
     Text(String),
+
+    /// A `// comment` line.
+    Comment(String),
 }
 
 /// An HTML element.
@@ -48,11 +51,13 @@ pub struct Element {
 }
 
 /// An attribute on an element.
+/// For event handlers (`@click.prevent`), modifiers stores `["prevent"]`.
 #[derive(Debug, Clone, PartialEq)]
 pub struct Attribute {
     pub name: String,
     pub value: Option<Expression>,
     pub prefix: Option<AttributePrefix>,
+    pub modifiers: Vec<String>,
 }
 
 /// The three HRML prefixes.
@@ -220,7 +225,7 @@ pub enum ExprKind {
         value: Box<Expression>,
     },
 
-    /// Template literal segment (from `{{ expr }}` interpolation)
+    /// Template literal segment (from `{expr}` interpolation)
     Interpolation(Box<Expression>),
 }
 
