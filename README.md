@@ -148,14 +148,14 @@ gantt
     title HRML Development Roadmap
     dateFormat YYYY-MM
     section Core Features
-    Computed properties          :done, 2026-03, 2026-04
-    Conditional rendering        :active, 2026-04, 2026-05
-    List rendering (:each)       :2026-05, 2026-06
+    Computed properties          :2026-04, 2026-05
+    Conditional rendering        :2026-05, 2026-06
+    List rendering (:each)       :2026-06, 2026-07
     section Server
-    HTTP client ($get/$post)     :2026-06, 2026-07
+    HTTP client ($get/$post)     :2026-07, 2026-08
     section UI
-    CSS generation               :2026-07, 2026-08
-    Headless components          :2026-08, 2026-09
+    CSS generation               :2026-08, 2026-09
+    Headless components          :2026-09, 2026-10
 ```
 
 **Next milestones:**
