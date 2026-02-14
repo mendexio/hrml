@@ -1,0 +1,44 @@
+// Tabs Example - Tab navigation pattern
+
+state
+  activeTab: "home"
+
+div .container
+  h1 "Tab Navigation"
+
+  div .tab-buttons
+    button @click="activeTab = 'home'" .tab-btn "Home"
+    button @click="activeTab = 'profile'" .tab-btn "Profile"
+    button @click="activeTab = 'settings'" .tab-btn "Settings"
+    button @click="activeTab = 'about'" .tab-btn "About"
+
+  div .tab-content
+    div :show="activeTab === 'home'" .tab-panel
+      h2 "Home Tab"
+      p "Welcome to the home tab!"
+      p "This is the default view when the app loads."
+
+    div :show="activeTab === 'profile'" .tab-panel
+      h2 "Profile Tab"
+      p "User profile information goes here."
+      p "Name: John Doe"
+      p "Email: john@example.com"
+
+    div :show="activeTab === 'settings'" .tab-panel
+      h2 "Settings Tab"
+      p "Application settings and preferences."
+      label
+        input type="checkbox"
+        span " Enable notifications"
+      label
+        input type="checkbox"
+        span " Dark mode"
+
+    div :show="activeTab === 'about'" .tab-panel
+      h2 "About Tab"
+      p "About this application."
+      p "Version: 1.0.0"
+      p "Built with HRML"
+
+  div .footer
+    p "Current tab: {activeTab}"

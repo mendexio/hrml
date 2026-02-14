@@ -1,5 +1,37 @@
+// Toggle Example - Multiple toggle patterns
+
 state
   visible: true
+  menu: false
+  dark: false
+  notifications: true
 
-button @click="visible = !visible" "Toggle"
-div :show="visible" "Content"
+div .container
+  h1 "Toggle Examples"
+
+  div .section
+    h2 "Basic Toggle"
+    button @click="visible = !visible" .btn "Toggle Content"
+    div :show="visible" .content
+      p "This content can be hidden or shown"
+
+  div .section
+    h2 "Menu Toggle"
+    button @click="menu = !menu" .btn "Menu"
+    div :show="menu" .menu
+      p "Home"
+      p "About"
+      p "Contact"
+
+  div .section
+    h2 "Dark Mode"
+    button @click="dark = !dark" .btn "Toggle Theme"
+    p :show="dark" "Dark mode is ON"
+    p :show="!dark" "Light mode is ON"
+
+  div .section
+    h2 "Notifications"
+    label
+      input type="checkbox" :model="notifications"
+      span " Enable notifications"
+    p :show="notifications" .success "Notifications are enabled"
