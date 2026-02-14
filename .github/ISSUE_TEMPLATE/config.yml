@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Documentation
+    url: https://github.com/mendexio/hrml/blob/main/README.md
+    about: Check the README and docs for answers first
+  - name: Playground
+    url: https://hrml.dev/playground
+    about: Try HRML in the browser playground
