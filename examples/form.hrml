@@ -1,4 +1,5 @@
-// Form Validation Example - Demonstrates form handling and validation
+// Form Validation Example
+// Note: Advanced validation features are planned for future releases
 
 state
   name: ""
@@ -9,41 +10,33 @@ state
   submitted: false
   nameError: ""
   emailError: ""
-  passwordError: ""
 
 div .container
   h1 "Registration Form"
 
-  form @submit.prevent="handleSubmit()" .registration-form
+  form @submit.prevent="submitted = true" .registration-form
     div .form-group
       label "Full Name"
       input :model="name" type="text" placeholder="John Doe" .form-input
-      p :show="nameError.length > 0" .error "{nameError}"
+      p :show="nameError" .error "{nameError}"
 
     div .form-group
       label "Email Address"
       input :model="email" type="email" placeholder="john@example.com" .form-input
-      p :show="emailError.length > 0" .error "{emailError}"
+      p :show="emailError" .error "{emailError}"
 
     div .form-group
       label "Password"
       input :model="password" type="password" placeholder="Min 8 characters" .form-input
-      p :show="password.length > 0" :class="{ valid: password.length >= 8, invalid: password.length < 8 }" "Password strength: {password.length}/8"
 
     div .form-group
       label "Confirm Password"
       input :model="passwordConfirm" type="password" placeholder="Re-enter password" .form-input
-      p :show="passwordError.length > 0" .error "{passwordError}"
 
     div .form-actions
       button type="submit" :disabled="submitting" .btn .btn-primary "Submit"
-      button type="button" @click="resetForm()" .btn .btn-secondary "Reset"
+      button type="button" @click="name = ''" .btn .btn-secondary "Clear Name"
 
     div :show="submitted" .success-message
-      h3 "✓ Registration Successful!"
+      h3 "Registration Successful!"
       p "Welcome, {name}!"
-
-// Note: Functions (fn) are planned for future release
-// This example shows intended syntax for form validation
-computed
-  isValid: name.length > 0 && email.includes("@") && password.length >= 8 && password === passwordConfirm
