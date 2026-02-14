@@ -169,3 +169,5 @@ gantt
 ## License
 
 [MIT](LICENSE) - Mendex
+
+> See [AI-DISCLOSURE.md](AI-DISCLOSURE.md) for our transparency statement on AI tool usage.
