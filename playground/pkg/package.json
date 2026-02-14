@@ -1,0 +1,21 @@
+{
+  "name": "hrml-wasm",
+  "type": "module",
+  "description": "WASM bindings for the HRML web language compiler",
+  "version": "0.7.0",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mendexio/hrml"
+  },
+  "files": [
+    "hrml_wasm_bg.wasm",
+    "hrml_wasm.js",
+    "hrml_wasm.d.ts"
+  ],
+  "main": "hrml_wasm.js",
+  "types": "hrml_wasm.d.ts",
+  "sideEffects": [
+    "./snippets/*"
+  ]
+}

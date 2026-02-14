@@ -80,7 +80,7 @@ main {
 }
 
 #left-panel {
-  flex: 0 0 30%;
+  flex: 0 0 50%;
 }
 
 .panel-header {
@@ -140,7 +140,7 @@ main {
 
 /* Preview */
 .preview-container {
-  flex: 0 0 25%;
+  flex: 0 0 50%;
   display: flex;
   flex-direction: column;
   min-height: 0;
