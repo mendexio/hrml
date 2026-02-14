@@ -1,0 +1,42 @@
+// Form Validation Example
+// Note: Advanced validation features are planned for future releases
+
+state
+  name: ""
+  email: ""
+  password: ""
+  passwordConfirm: ""
+  submitting: false
+  submitted: false
+  nameError: ""
+  emailError: ""
+
+div .container
+  h1 "Registration Form"
+
+  form @submit.prevent="submitted = true" .registration-form
+    div .form-group
+      label "Full Name"
+      input :model="name" type="text" placeholder="John Doe" .form-input
+      p :show="nameError" .error "{nameError}"
+
+    div .form-group
+      label "Email Address"
+      input :model="email" type="email" placeholder="john@example.com" .form-input
+      p :show="emailError" .error "{emailError}"
+
+    div .form-group
+      label "Password"
+      input :model="password" type="password" placeholder="Min 8 characters" .form-input
+
+    div .form-group
+      label "Confirm Password"
+      input :model="passwordConfirm" type="password" placeholder="Re-enter password" .form-input
+
+    div .form-actions
+      button type="submit" :disabled="submitting" .btn .btn-primary "Submit"
+      button type="button" @click="name = ''" .btn .btn-secondary "Clear Name"
+
+    div :show="submitted" .success-message
+      h3 "Registration Successful!"
+      p "Welcome, {name}!"

@@ -1,0 +1,42 @@
+// Fetch on Load Example
+// Note: Server communication ($get, $post) is planned for future releases
+// This example demonstrates the intended pattern and loading states
+
+state
+  loading: false
+  error: false
+  data: ""
+  username: "johndoe"
+
+div .container
+  h1 "Data Fetching Pattern"
+
+  div .controls
+    button @click="loading = true" .btn .btn-primary "Simulate Fetch"
+    button @click="loading = false" .btn .btn-success "Simulate Success"
+    button @click="error = true" .btn .btn-danger "Simulate Error"
+    button @click="loading = false" .btn .btn-secondary "Reset"
+
+  div .content
+    div :show="loading" .loading
+      p "Loading data..."
+      p "Please wait..."
+
+    div :show="error" .error
+      p "Failed to load data"
+      button @click="error = false" .btn "Retry"
+
+    div :show="!loading" .data
+      h2 "User Data"
+      p "Username: {username}"
+      p "Status: Ready"
+
+  div .planned-syntax
+    h3 "Planned Syntax (v1.0+):"
+    code "$get=\"/api/user\" $data=\"userData\" $loading=\"isLoading\""
+
+// Future implementation will look like:
+// div $get="/api/user" $data="userData" $loading="loading" $error="error"
+//   p :show="loading" "Loading..."
+//   p :show="error" "Error: {error.message}"
+//   p :show="userData" "Welcome, {userData.name}!"

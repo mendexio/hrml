@@ -1,7 +1,23 @@
+// Counter Example - Demonstrates state management and event handling
+
 state
   count: 0
+  step: 1
 
-div .counter
-  button @click="count--" "-"
-  span "{count}"
-  button @click="count++" "+"
+div .container
+  h1 "Counter Example"
+
+  div .counter-display
+    h2 "Current count: {count}"
+    p :show="count > 0" .positive "Positive number!"
+    p :show="count < 0" .negative "Negative number!"
+    p :show="count === 0" .zero "Zero!"
+
+  div .controls
+    button @click="count = count - step" .btn .btn-danger "-"
+    button @click="count = 0" .btn .btn-secondary "Reset"
+    button @click="count = count + step" .btn .btn-success "+"
+
+  div .settings
+    label "Step size:"
+    input :model="step" type="number" .form-input

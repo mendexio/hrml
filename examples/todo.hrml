@@ -1,0 +1,34 @@
+// Todo List Example
+// Note: This example demonstrates planned syntax
+// Array operations and :each are not yet implemented in v0.7.0
+
+state
+  newTodo: ""
+  task1: ""
+  task2: ""
+  task3: ""
+  showCompleted: true
+
+div .container
+  h1 "Todo List"
+
+  div .input-section
+    input :model="newTodo" placeholder="What needs to be done?" .form-input
+    button @click="newTodo = ''" .btn .btn-primary "Clear Input"
+
+  div .todo-list
+    div .todo-item
+      input type="checkbox" .checkbox
+      span "Task 1: {task1}"
+
+    div .todo-item
+      input type="checkbox" .checkbox
+      span "Task 2: {task2}"
+
+    div .todo-item
+      input type="checkbox" .checkbox
+      span "Task 3: {task3}"
+
+  div .footer
+    button @click="showCompleted = !showCompleted" .btn "Toggle View"
+    p :show="showCompleted" "Showing completed tasks"

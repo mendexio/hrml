@@ -15,14 +15,18 @@
         <option value="counter">Counter</option>
         <option value="toggle">Toggle</option>
         <option value="input">Input Binding</option>
+        <option value="form">Form</option>
+        <option value="todo">Todo List</option>
+        <option value="tabs">Tabs</option>
+        <option value="fetch">Fetch/Loading</option>
       </select>
       <span class="version" id="version"></span>
     </div>
   </header>
 
   <main>
-    <!-- Left: Editor with syntax overlay -->
-    <div class="panel" id="left-panel">
+    <!-- Source -->
+    <div class="panel" id="source-panel">
       <div class="panel-header">Source</div>
       <div class="editor-wrap">
         <pre id="highlight" aria-hidden="true"></pre>
@@ -30,19 +34,20 @@
       </div>
     </div>
 
-    <div class="divider divider-h" id="divider-h"></div>
+    <div class="divider divider-h" id="divider-1"></div>
 
-    <!-- Right: Preview + Output -->
-    <div class="panel right-side" id="right-panel">
-      <div class="preview-container" id="preview-panel">
-        <div class="panel-header">Preview</div>
-        <iframe id="preview" sandbox="allow-scripts"></iframe>
-      </div>
-      <div class="divider divider-v" id="divider-v"></div>
-      <div class="output-container" id="output-panel">
-        <div class="panel-header">Output</div>
-        <div id="output"></div>
-      </div>
+    <!-- Output -->
+    <div class="panel" id="output-panel">
+      <div class="panel-header">Output</div>
+      <div id="output"></div>
+    </div>
+
+    <div class="divider divider-h" id="divider-2"></div>
+
+    <!-- Preview -->
+    <div class="panel" id="preview-panel">
+      <div class="panel-header">Preview</div>
+      <iframe id="preview" sandbox="allow-scripts allow-forms"></iframe>
     </div>
   </main>
 
@@ -213,17 +218,17 @@
     }
 
     makeDraggable(
-      document.getElementById('divider-h'),
+      document.getElementById('divider-1'),
       'horizontal',
-      document.getElementById('left-panel'),
-      document.getElementById('right-panel')
+      document.getElementById('source-panel'),
+      document.getElementById('output-panel')
     );
 
     makeDraggable(
-      document.getElementById('divider-v'),
-      'vertical',
-      document.getElementById('preview-panel'),
-      document.getElementById('output-panel')
+      document.getElementById('divider-2'),
+      'horizontal',
+      document.getElementById('output-panel'),
+      document.getElementById('preview-panel')
     );
   </script>
 
