@@ -1,0 +1,49 @@
+// Form Validation Example - Demonstrates form handling and validation
+
+state
+  name: ""
+  email: ""
+  password: ""
+  passwordConfirm: ""
+  submitting: false
+  submitted: false
+  nameError: ""
+  emailError: ""
+  passwordError: ""
+
+div .container
+  h1 "Registration Form"
+
+  form @submit.prevent="handleSubmit()" .registration-form
+    div .form-group
+      label "Full Name"
+      input :model="name" type="text" placeholder="John Doe" .form-input
+      p :show="nameError.length > 0" .error "{nameError}"
+
+    div .form-group
+      label "Email Address"
+      input :model="email" type="email" placeholder="john@example.com" .form-input
+      p :show="emailError.length > 0" .error "{emailError}"
+
+    div .form-group
+      label "Password"
+      input :model="password" type="password" placeholder="Min 8 characters" .form-input
+      p :show="password.length > 0" :class="{ valid: password.length >= 8, invalid: password.length < 8 }" "Password strength: {password.length}/8"
+
+    div .form-group
+      label "Confirm Password"
+      input :model="passwordConfirm" type="password" placeholder="Re-enter password" .form-input
+      p :show="passwordError.length > 0" .error "{passwordError}"
+
+    div .form-actions
+      button type="submit" :disabled="submitting" .btn .btn-primary "Submit"
+      button type="button" @click="resetForm()" .btn .btn-secondary "Reset"
+
+    div :show="submitted" .success-message
+      h3 "✓ Registration Successful!"
+      p "Welcome, {name}!"
+
+// Note: Functions (fn) are planned for future release
+// This example shows intended syntax for form validation
+computed
+  isValid: name.length > 0 && email.includes("@") && password.length >= 8 && password === passwordConfirm
