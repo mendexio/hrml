@@ -13,6 +13,35 @@
   --font-mono: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
 }
 
+/* Scrollbars */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--surface) var(--bg);
+}
+
+*::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+*::-webkit-scrollbar-track {
+  background: var(--bg);
+}
+
+*::-webkit-scrollbar-thumb {
+  background: var(--surface);
+  border-radius: 5px;
+  border: 2px solid var(--bg);
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: var(--border);
+}
+
+*::-webkit-scrollbar-corner {
+  background: var(--bg);
+}
+
 body {
   font-family: system-ui, -apple-system, sans-serif;
   background: var(--bg);
@@ -79,8 +108,12 @@ main {
   min-width: 0;
 }
 
-#left-panel {
-  flex: 0 0 50%;
+#source-panel {
+  flex: 0 0 30%;
+}
+
+#preview-panel {
+  flex: 0 0 30%;
 }
 
 .panel-header {
@@ -95,7 +128,7 @@ main {
 }
 
 /* Dividers (draggable) */
-.divider-h {
+.divider {
   width: 5px;
   background: var(--border);
   flex-shrink: 0;
@@ -103,67 +136,14 @@ main {
   transition: background 0.15s;
 }
 
-.divider-h:hover {
+.divider:hover {
   background: var(--accent);
-}
-
-.divider-v {
-  height: 5px;
-  background: var(--border);
-  flex-shrink: 0;
-  cursor: row-resize;
-  transition: background 0.15s;
-}
-
-/* Editor */
-#editor {
-  flex: 1;
-  background: var(--bg);
-  color: var(--text);
-  border: none;
-  padding: 12px;
-  font-family: var(--font-mono);
-  font-size: 14px;
-  line-height: 1.6;
-  resize: none;
-  outline: none;
-  tab-size: 2;
-}
-
-/* Right side: preview + output */
-.right-side {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  min-width: 0;
-}
-
-/* Preview */
-.preview-container {
-  flex: 0 0 50%;
-  display: flex;
-  flex-direction: column;
-  min-height: 0;
-}
-
-.preview-container iframe {
-  flex: 1;
-  border: none;
-  background: #fff;
 }
 
 /* Output */
-.output-container {
-  flex: 1;
-  min-height: 0;
-  overflow: auto;
-}
-
-.divider-v:hover {
-  background: var(--accent);
-}
-
 #output {
+  flex: 1;
+  overflow: auto;
   font-family: var(--font-mono);
   font-size: 12px;
   line-height: 1.5;
@@ -175,6 +155,13 @@ main {
 
 #output.error {
   color: var(--error);
+}
+
+/* Preview iframe */
+#preview {
+  flex: 1;
+  border: none;
+  background: #fff;
 }
 
 /* Syntax highlighting — output */
