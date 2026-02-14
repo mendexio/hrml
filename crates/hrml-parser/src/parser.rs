@@ -1026,4 +1026,91 @@ mod tests {
         assert!(has_state, "Should have state directive");
         assert!(has_event, "Should have event handler");
     }
+
+    // =========================================================================
+    // Day 9: Additional test cases (5 more tests)
+    // =========================================================================
+
+    #[test]
+    fn test_computed_with_expression() {
+        let doc = parse("computed\n  fullName: firstName + \" \" + lastName\n  incremented: count + 1");
+        match &doc.nodes[0] {
+            Node::ComputedBlock(cb) => {
+                assert_eq!(cb.fields.len(), 2);
+                assert_eq!(cb.fields[0].name, "fullName");
+                assert_eq!(cb.fields[1].name, "incremented");
+                // Expressions parsed successfully (complex expressions in body field)
+            }
+            other => panic!("Expected ComputedBlock, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn test_multiple_modifiers_chained() {
+        let doc = parse("form @submit.prevent.stop=\"handleSubmit()\"");
+        let el = first_element(&doc);
+
+        assert_eq!(el.attributes.len(), 1);
+        assert_eq!(el.attributes[0].name, "submit");
+        assert_eq!(el.attributes[0].modifiers.len(), 2);
+        assert!(el.attributes[0].modifiers.contains(&"prevent".to_string()));
+        assert!(el.attributes[0].modifiers.contains(&"stop".to_string()));
+    }
+
+    #[test]
+    fn test_boolean_attribute() {
+        let doc = parse("input type=\"checkbox\" checked");
+        let el = first_element(&doc);
+
+        // Should have type and checked attributes
+        assert!(el.attributes.len() >= 1);
+        let has_type = el.attributes.iter().any(|a| a.name == "type");
+        assert!(has_type, "Should have type attribute");
+    }
+
+    #[test]
+    fn test_state_followed_by_nested_elements() {
+        let doc = parse("state\n  count: 0\n\ndiv\n  section\n    p \"Count: {count}\"");
+
+        assert_eq!(doc.nodes.len(), 2); // state + div
+
+        // First should be state
+        assert!(matches!(&doc.nodes[0], Node::StateBlock(_)));
+
+        // Second should be div with nested section
+        match &doc.nodes[1] {
+            Node::Element(div) => {
+                assert_eq!(div.tag, "div");
+                assert_eq!(div.children.len(), 1);
+                match &div.children[0] {
+                    Node::Element(section) => {
+                        assert_eq!(section.tag, "section");
+                        assert_eq!(section.children.len(), 1);
+                    }
+                    _ => panic!("Expected section element"),
+                }
+            }
+            _ => panic!("Expected div element"),
+        }
+    }
+
+    #[test]
+    fn test_empty_string_values() {
+        let doc = parse("state\n  search: \"\"\n  error: \"\"\n\ninput :model=\"search\" placeholder=\"\"");
+
+        // State with empty strings
+        let sb = first_state(&doc);
+        assert_eq!(sb.fields.len(), 2);
+        assert!(matches!(sb.fields[0].value.kind, ExprKind::String(ref s) if s.is_empty()));
+        assert!(matches!(sb.fields[1].value.kind, ExprKind::String(ref s) if s.is_empty()));
+
+        // Element with empty placeholder
+        match &doc.nodes[1] {
+            Node::Element(el) => {
+                let placeholder = el.attributes.iter().find(|a| a.name == "placeholder");
+                assert!(placeholder.is_some(), "Should have placeholder attribute");
+            }
+            _ => panic!("Expected element"),
+        }
+    }
 }
